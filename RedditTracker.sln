@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedditTracker.Test", "Reddi
 		{162701F7-45C7-4464-9202-0F69A8D256BB} = {162701F7-45C7-4464-9202-0F69A8D256BB}
 	EndProjectSection
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Database", "Database\Database.sqlproj", "{45FB526A-A8C8-4053-AA9C-DAE8DCB7B064}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,12 @@ Global
 		{95765CBB-6FFD-4FB9-A88E-61A8F1C8C412}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95765CBB-6FFD-4FB9-A88E-61A8F1C8C412}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95765CBB-6FFD-4FB9-A88E-61A8F1C8C412}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45FB526A-A8C8-4053-AA9C-DAE8DCB7B064}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45FB526A-A8C8-4053-AA9C-DAE8DCB7B064}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45FB526A-A8C8-4053-AA9C-DAE8DCB7B064}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{45FB526A-A8C8-4053-AA9C-DAE8DCB7B064}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45FB526A-A8C8-4053-AA9C-DAE8DCB7B064}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45FB526A-A8C8-4053-AA9C-DAE8DCB7B064}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

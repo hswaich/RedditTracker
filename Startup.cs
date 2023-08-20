@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RedditTracker.Repository;
 using RedditTracker.Services;
 
 namespace RedditTracker
@@ -20,6 +21,7 @@ namespace RedditTracker
             services.AddSingleton<IUtilityService, UtilityService>();
             services.AddSingleton<IApiService, ApiService>();
             services.AddSingleton<IWatcherService, WatcherService>();
+            services.AddSingleton<IDatabaseRepository, DatabaseRepository>();
 
             return services;
         }
