@@ -1,4 +1,4 @@
-# RedditTracker
+# RedditTracker appsettings.json
 You will need Reddit API key and Reddit account username and password to run this.
 Optionally if database storage is needed publish database and setup connection string as well.
 These need to be setupo in appsettings.json, please see below.
@@ -14,3 +14,5 @@ These need to be setupo in appsettings.json, please see below.
     "username": "--Reddit username--",
     "password": "--Reddit password--"
   }
+
+# In Program.cs file, you can setup 1 or more subreddits you want to track.
