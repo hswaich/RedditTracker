@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedditTracker", "RedditTracker.csproj", "{162701F7-45C7-4464-9202-0F69A8D256BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedditTracker.Test", "RedditTracker.Test\RedditTracker.Test.csproj", "{95765CBB-6FFD-4FB9-A88E-61A8F1C8C412}"
+	ProjectSection(ProjectDependencies) = postProject
+		{162701F7-45C7-4464-9202-0F69A8D256BB} = {162701F7-45C7-4464-9202-0F69A8D256BB}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{162701F7-45C7-4464-9202-0F69A8D256BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{162701F7-45C7-4464-9202-0F69A8D256BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{162701F7-45C7-4464-9202-0F69A8D256BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{162701F7-45C7-4464-9202-0F69A8D256BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95765CBB-6FFD-4FB9-A88E-61A8F1C8C412}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95765CBB-6FFD-4FB9-A88E-61A8F1C8C412}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95765CBB-6FFD-4FB9-A88E-61A8F1C8C412}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95765CBB-6FFD-4FB9-A88E-61A8F1C8C412}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C61B6236-7A40-4389-80C1-C8E561C13164}
+	EndGlobalSection
+EndGlobal
