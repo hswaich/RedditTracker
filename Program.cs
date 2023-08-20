@@ -1,2 +1,8 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using Microsoft.Extensions.DependencyInjection;
+using RedditTracker.Services;
+using RedditTracker;
+
+var services = Startup.ConfigureServices();
+var serviceProvider = services.BuildServiceProvider();
+
+await serviceProvider.GetService<IWatcherService>().Run();
