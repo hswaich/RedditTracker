@@ -2,6 +2,6 @@
 {
     public interface IWatcherService
     {
-        Task Run();
+        Task Run(List<string> subreddits);
     }
 }
