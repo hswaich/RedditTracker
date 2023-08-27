@@ -11,7 +11,6 @@ namespace RedditTracker.Services
     {
         private readonly IApiService _apiService;
         private readonly IUtilityService _utilityService;
-      //  private readonly IDatabaseRepository _databaseRepository;
         private readonly IStatisticsService _statisticsService;
         private List<string> _subreddits;
         private bool _databaseTableIsValid;
@@ -23,7 +22,6 @@ namespace RedditTracker.Services
         {
             _apiService = apiService;
             _utilityService = utilityService;
-        //    _databaseRepository = databaseRepository;
             _statisticsService = statisticsService;
             apiCallTasks = new ConcurrentQueue<Task<List<RedditPost>>>();
             completedTasks = new ConcurrentQueue<Task<List<RedditPost>>>();
@@ -31,20 +29,8 @@ namespace RedditTracker.Services
 
         public async Task Run(List<string> subreddits)
         {
-            _subreddits = subreddits;
-            //_databaseTableIsValid = await _databaseRepository.CheckDatabaseConnectionAndTable();
-            //if (_databaseTableIsValid) 
-            //{
-            //    Console.WriteLine("Database connection successful.");
-            //}
-            //insert to db all records at once
-            //if (_databaseTableIsValid && subredditMessages.Count > 0)
-            //{
-            //    await _databaseRepository.Insert(subredditMessages);
-            //}
-
-            await Run();
-           
+            _subreddits = subreddits;    
+            await Run();           
         }
 
         private async Task Run()
@@ -59,7 +45,7 @@ namespace RedditTracker.Services
 
                     if (completedTask.IsCompletedSuccessfully)
                     {
-                        Console.WriteLine($"{(int)_apiService.ResponseHeader.RateLimitRemaining}/{_apiService.ResponseHeader.RateLimitUsed} RMNG/used calls. {_apiService.ResponseHeader.RateLimitReset} reset secs");
+                        //Console.WriteLine($"{(int)_apiService.ResponseHeader.RateLimitRemaining}/{_apiService.ResponseHeader.RateLimitUsed} RMNG/used calls. {_apiService.ResponseHeader.RateLimitReset} reset secs");
                         apiCallTasks.TryDequeue(out completedTask);
                         completedTasks.Enqueue(completedTask);
 
@@ -84,11 +70,11 @@ namespace RedditTracker.Services
 
         private async Task ProcessResults()
         {
-            Console.WriteLine($"Processing results...{completedTasks.Count} tasks in queue.");
+            //Console.WriteLine($"Processing results...{completedTasks.Count} tasks in queue.");
             //await Task.Delay(10000);
             completedTasks.TryDequeue(out Task<List<RedditPost>> completedTask);
             await _statisticsService.Process(completedTask.Result.Select(a => a.Data).ToList());
-            Console.WriteLine($"Results processed. {completedTasks.Count} tasks in queue..............................");
+            //Console.WriteLine($"Results processed. {completedTasks.Count} tasks in queue..............................");
         }
 
         private string getSubReddit() 

@@ -90,11 +90,11 @@ namespace RedditTracker.Services
 
             if (authorWithMostPosts == null)
             {
-                printArray.Add($"No Author has posted since tracking started.");
+                printArray.Add($"No new Author.");
             }
             else
             {
-                printArray.Add($"Author: {authorWithMostPosts} has most posts.");
+                printArray.Add($"Author: {authorWithMostPosts}.");
             }
 
             string maxVotesKeytruncatedString = maxVotesKey.Length > 20 ? $"{maxVotesKey.Substring(0, 20)}..." : maxVotesKey;
