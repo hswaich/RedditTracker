@@ -8,8 +8,6 @@ namespace RedditTracker.Services
 
         Task<string> GetToken();
 
-        Task<ISubreddit> GetTopPostWithMostUpvotesAsync(string subreddit);
-
-        Task<ISubreddit> GetUserWithMostPostsAsync(string subreddit);
+        Task<List<RedditPost>> GetData(string subreddit);
     }
 }

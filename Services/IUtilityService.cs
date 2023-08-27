@@ -6,10 +6,8 @@ namespace RedditTracker.Services
     {
         ResponseHeader GetResponseHeader(HttpResponseMessage response);
 
-        string PrintLine(List<ISubreddit> subreddits);
-
         string PrintResponseHeaderStatus(ResponseHeader responseHeader, int delay);
 
-        int CalculateDelay(ResponseHeader responseHeader, int taskCount);
+        int GetDelay(ResponseHeader responseHeader);
     }
 }

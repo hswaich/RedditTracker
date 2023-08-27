@@ -1,84 +1,105 @@
 ﻿using RedditTracker.Repository;
 using RedditTracker.Structures;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace RedditTracker.Services
 {
     public class WatcherService : IWatcherService
+
     {
         private readonly IApiService _apiService;
         private readonly IUtilityService _utilityService;
-        private readonly IDatabaseRepository _databaseRepository; 
+      //  private readonly IDatabaseRepository _databaseRepository;
+        private readonly IStatisticsService _statisticsService;
         private List<string> _subreddits;
         private bool _databaseTableIsValid;
-                
-        public WatcherService(IApiService apiService, IUtilityService utilityService, IDatabaseRepository databaseRepository)
+        private int subredditCounter = 0;
+        ConcurrentQueue<Task<List<RedditPost>>> apiCallTasks;
+        ConcurrentQueue<Task<List<RedditPost>>> completedTasks;
+
+        public WatcherService(IApiService apiService, IUtilityService utilityService, IStatisticsService statisticsService)
         {
             _apiService = apiService;
             _utilityService = utilityService;
-            _databaseRepository = databaseRepository;            
+        //    _databaseRepository = databaseRepository;
+            _statisticsService = statisticsService;
+            apiCallTasks = new ConcurrentQueue<Task<List<RedditPost>>>();
+            completedTasks = new ConcurrentQueue<Task<List<RedditPost>>>();
         }
 
         public async Task Run(List<string> subreddits)
         {
             _subreddits = subreddits;
-            _databaseTableIsValid = await _databaseRepository.CheckDatabaseConnectionAndTable();
-            if (_databaseTableIsValid) 
-            {
-                Console.WriteLine("Database connection successful.");
-            }
-            
+            //_databaseTableIsValid = await _databaseRepository.CheckDatabaseConnectionAndTable();
+            //if (_databaseTableIsValid) 
+            //{
+            //    Console.WriteLine("Database connection successful.");
+            //}
+            //insert to db all records at once
+            //if (_databaseTableIsValid && subredditMessages.Count > 0)
+            //{
+            //    await _databaseRepository.Insert(subredditMessages);
+            //}
+
             await Run();
+           
         }
 
         private async Task Run()
         {
-            int delay = 0;
-            List<Task<ISubreddit>> taskList = new List<Task<ISubreddit>>(); // sr times 2 e.g. 3 sr = 6 tasks
-            foreach (var subreddit in _subreddits)
-            {
-                taskList.Add(_apiService.GetTopPostWithMostUpvotesAsync(subreddit));
-                taskList.Add(_apiService.GetUserWithMostPostsAsync(subreddit));
-            }
-            
             try
             {
-                ISubreddit[] results = await Task.WhenAll(taskList);
-                delay = _utilityService.CalculateDelay(_apiService.ResponseHeader, taskList.Count);
+                apiCallTasks.Enqueue(_apiService.GetData(getSubReddit()));
 
-                List<SubredditMessage> subredditMessages = new List<SubredditMessage>();
-                
-                //Printing: consolidate multiple calls for same subReddit on same Line
-                int counter = 1;
-                foreach (string subreddit in _subreddits)
+                while (apiCallTasks.Any())
                 {
-                    var subredditResult = results.Where(x => x.Subreddit == subreddit).ToList();
+                    var completedTask = await Task.WhenAny(apiCallTasks);
 
-                    string printLine = _utilityService.PrintLine(subredditResult);
-
-                    if (counter == _subreddits.Count) // print API stats on lastline
+                    if (completedTask.IsCompletedSuccessfully)
                     {
-                        printLine = printLine + " " + _utilityService.PrintResponseHeaderStatus(_apiService.ResponseHeader, delay);
+                        Console.WriteLine($"{(int)_apiService.ResponseHeader.RateLimitRemaining}/{_apiService.ResponseHeader.RateLimitUsed} RMNG/used calls. {_apiService.ResponseHeader.RateLimitReset} reset secs");
+                        apiCallTasks.TryDequeue(out completedTask);
+                        completedTasks.Enqueue(completedTask);
+
+                        await Task.Delay(_utilityService.GetDelay(_apiService.ResponseHeader));
+                        apiCallTasks.Enqueue(_apiService.GetData(getSubReddit())); 
+                        ProcessResults(); // no await 
+                        
                     }
-
-                    subredditMessages.Add(new SubredditMessage { Subreddit = subreddit, Message = printLine });
-                    Console.WriteLine(printLine);
-                    counter++;
-                }
-
-                //insert to db all records at once
-                if (_databaseTableIsValid && subredditMessages.Count > 0)
-                {
-                    await _databaseRepository.Insert(subredditMessages);
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception: {ex.Message}");
+                Console.WriteLine(ex.Message);
             }
+            finally 
+            {
+                apiCallTasks.Clear();
+                completedTasks.Clear();
+                await Run();
+            }
+        }
 
-            Thread.Sleep(delay);
+        private async Task ProcessResults()
+        {
+            Console.WriteLine($"Processing results...{completedTasks.Count} tasks in queue.");
+            //await Task.Delay(10000);
+            completedTasks.TryDequeue(out Task<List<RedditPost>> completedTask);
+            await _statisticsService.Process(completedTask.Result.Select(a => a.Data).ToList());
+            Console.WriteLine($"Results processed. {completedTasks.Count} tasks in queue..............................");
+        }
 
-            await Run();
+        private string getSubReddit() 
+        {
+            string subreddit = _subreddits[subredditCounter];
+            subredditCounter++;
+            if (subredditCounter == _subreddits.Count)
+            {
+                subredditCounter = 0;
+            }
+            return subreddit;
         }
     }
 }

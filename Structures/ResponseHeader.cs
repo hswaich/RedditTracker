@@ -6,7 +6,7 @@
         public decimal RateLimitRemaining { get; set; }
         public decimal RateLimitReset { get; set; }
 
-        public decimal Delay
+        public decimal DelaySeconds
         {
             get
             {

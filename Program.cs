@@ -7,7 +7,7 @@ var serviceProvider = services.BuildServiceProvider();
 
 List<string> subreddits = new List<string>();
 subreddits.Add("funny");
+subreddits.Add("AskReddit");
 subreddits.Add("gaming");
-subreddits.Add("aww");
 
 await serviceProvider.GetService<IWatcherService>().Run(subreddits);

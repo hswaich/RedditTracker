@@ -19,6 +19,7 @@ namespace RedditTracker
             services.AddSingleton(configuration);
             services.AddSingleton<IHttpClientWrapper, HttpClientWrapper>();
             services.AddSingleton<IUtilityService, UtilityService>();
+            services.AddSingleton<IStatisticsService, StatisticsService>();
             services.AddSingleton<IApiService, ApiService>();
             services.AddSingleton<IWatcherService, WatcherService>();
             services.AddSingleton<IDatabaseRepository, DatabaseRepository>();

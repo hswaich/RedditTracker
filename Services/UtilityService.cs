@@ -4,9 +4,6 @@ namespace RedditTracker.Services
 {
     public class UtilityService : IUtilityService
     {
-        private const int subredditNameMaxLength = 10;
-        private const int subredditMessageMaxLength = 20;
-
         public ResponseHeader GetResponseHeader(HttpResponseMessage response)
         {
             var responseHeader = new ResponseHeader();
@@ -35,49 +32,28 @@ namespace RedditTracker.Services
                 }
             }
             return responseHeader;
-        }
-
-        public string PrintLine(List<ISubreddit> subreddits)
-        {
-            var subreddit = subreddits.FirstOrDefault().Subreddit;
-
-            List<string> printArray = new List<string>();
-            printArray.Add(PrintLine(subreddit, subredditNameMaxLength));
-            foreach (var result in subreddits.OrderBy(x => x.PrintColumnNumber))
-            {
-                printArray.Add(PrintLine(result.PrintLine, subredditMessageMaxLength));
-            }
-
-            return String.Join(" | ", printArray);
-        }
+        }      
 
         public string PrintResponseHeaderStatus(ResponseHeader responseHeader, int delay)
         {
             return $"{(int)responseHeader.RateLimitRemaining}/{responseHeader.RateLimitUsed} RMNG/used calls. {responseHeader.RateLimitReset}/{delay / 1000} reset/delay secs";
         }
-
-        public int CalculateDelay(ResponseHeader responseHeader, int taskCount)
+        
+        public int GetDelay(ResponseHeader responseHeader)
         {
             if (responseHeader == null)
             {
                 return 0;
             }
-            else if (taskCount > responseHeader.RateLimitRemaining)
+            else if (responseHeader.RateLimitRemaining == 0)
             {
                 Console.WriteLine($"Waiting {(int)responseHeader.RateLimitReset} for API rate limit refresh.");
-                return (int)responseHeader.RateLimitReset;
+                return (int)responseHeader.RateLimitReset *1000;
             }
             else
             {
-                return (int)(responseHeader.Delay * 1000 * taskCount);
+                return (int)(responseHeader.DelaySeconds * 1000);
             }
-        }
-
-        private string PrintLine(string line, int length)
-        {
-            string truncatedString = line.Length > length ? line.Substring(0, length) : line;
-            string paddedString = truncatedString.PadRight(length);
-            return paddedString;
         }
     }
 }
